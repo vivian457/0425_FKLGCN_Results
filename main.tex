@@ -20,7 +20,7 @@
 \title{LPI-FKLGCN}
 \author[1]{Wen Li}
 \author[1,*]{Shulin Wang}
-\author[1]{Su Zhou}
+\author[1]{Hu Guo}
 \affil[1]{Hunan University, College of Computer Science and Electronic Engineering,Hunan, Changsha, 410082, China}
 \affil[*]{corresponding.smartforesting@163.com}
 
@@ -61,6 +61,10 @@ Considering the importance of features extracted from sequence information, simi
 %%实验环境交代清楚
 The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
 
+The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
+
+The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
+
 \begin{table}[ht]
 \centering
 \caption{\label{tab:datasets} The statistics of the datasets used in the experiments (350 words max). Example legend text.}
@@ -80,7 +84,16 @@ Novel_Dataset & 1050 & 84 & 4467 \\
      \end{threeparttable}
 \end{table}
 
-\subsection*{2.2 Parametric Impact Analysis}
+\subsection*{2.2 Parametric impact analysis}
+As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
+
+
+As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
+
+
+As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
+
+
 As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
 
 \begin{figure}[ht]
@@ -101,7 +114,7 @@ As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide
 %    \label{fig:fig2-2}
 %\end{figure}
 
-\subsection*{2.3 Overall Performance Analysis}
+\subsection*{2.3 Overall performance analysis}
 The impact of fast kernel learning and multi-layer graph convolution layers are shown in the Table \ref{tab:parameter1}.
 \begin{itemize}
 \item kernel fusion with average weights
@@ -149,6 +162,13 @@ Dataset & Models & AUPR & AUC &	F1_score & Accuracy	& Recall & Specificity & Pre
 \item HRWR
 \item LPI-FKLKRR
 \end{itemize}
+\begin{itemize}
+\item RWR
+\item CF
+\item RA
+\item HRWR
+\item LPI-FKLKRR
+\end{itemize}
 
 \begin{table}[ht]
 \centering
@@ -183,6 +203,12 @@ Results of comparison with other classic methods are shown in Table \ref{tab:Com
 \item LPI-GCNIMC
 \end{itemize}
 
+\begin{itemize}
+\item LAGCN
+\item AEMDA
+\item LPI-GCNIMC
+\end{itemize}
+
 \begin{figure}[ht]
 \centering
 \subfigure[The ROC curve]{
@@ -197,7 +223,7 @@ Results of comparison with other classic methods are shown in Table \ref{tab:Com
 
 The results of comparison with the state-of-the-art methods are shown in the Figure \ref{Fig.lable3}.
 
-\subsection*{2.6 Case Study}
+\subsection*{2.6 Case study}
 TOP 10 predicted proteins for lncRNA NONHSAT145960 and TOP 10 predicted lncRNAs for protein ENSP00000401371 as shown in Table \ref{tab:caseStudy1}
 \begin{table}[ht]
 \centering
@@ -235,6 +261,16 @@ TOP 10 predicted proteins for lncRNA NONHSAT145960 and TOP 10 predicted lncRNAs 
 %出现某些预测的蛋白质的与lncRNA的值近似为0，可能原因其一，本身蛋白质与lncRNAs的关联数只有1，2不超过10个。
 TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
 
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
 \section*{Discussion}
 %The Discussion should be succinct and must not contain subheadings.
 %1.	简明扼要重申论文的主题及其重要性。
@@ -245,21 +281,23 @@ TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy
 %6.	论文工作的不足。例如受目前研究条件所限，未能获取某些更高的条件才能处理的问题，概述未来可以开展什么研究。
 First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
 
+First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
+
 \section*{Methods}
 \subsection*{Generate multiple kernels for lncRNAs and proteins}
 In order to make more accurate prediction, the LPI-FKLGCN model makes full use of multi-source information, such as known lncRNA-protein interaction, lncRNA and protein sequence, lncRNA expression profile and protein GO to generate multiple similarity kernels and feature kernels. Assume that matrix ${\bf{I}} \in {\Re ^{m \times n}}$ represents the adjacency matrix for lncRNA-protein interaction. If there is an interaction between lncRNA ${{l_i}}$ and protein ${{p_j}}$, ${\bf{I}}(i,j)$ assigns 1, otherwise it assigns 0. $1 \le i \le m$, $1 \le j \le n$, $m$, $n$ are the number of lncRNAs and proteins in the interaction profile.
 
-\subsubsection*{Sequence Feature Kernels for LncRNAs and proteins}
+\subsubsection*{Sequence feature kernels for lncRNAs and proteins}
 We extracted the sequence features of lncRNAs and proteins by the same way as in the previous literature \cite{Shen2019}. The lncRNA sequences are expressed by Conjoint Triad, and the protein sequences are expressed by Pseudo Position-Specific Score Matrix. Then, the Sequence Feature kernels ${\bf{K}}_l^{SF}$ and ${\bf{K}}_p^{SF}$ can be extracted by the Radial Basis Function (RBF) kernel.
 
-\subsubsection*{Sequence Similarity Kernels for LncRNAs and proteins}
+\subsubsection*{Sequence similarity kernels for lncRNAs and proteins}
 The lncRNA Sequence Similarity (SS) kernels ${\bf{K}}_l^{SS}$ can be calculated by normalized Smith-Watermark (SW) score as\cite{Shen2019}
 \begin{equation}
 {\bf{K}}_l^{SS}({l_i},{l_j}) = \frac{{SW({S_{{l_i}}},{S_{{l_j}}})}}{{\sqrt {SW({S_{{l_i}}},{S_{{l_j}}})SW({S_{{l_i}}},{S_{{l_j}}})} }} \label{eq:SSim}
 \end{equation}
 where ${{S_{{l_i}}}}$ denotes the sequence of lncRNA ${l_i}$, $SW( \cdot )$ represents the Smith-Watermark score. Similarly, if we put protein sequences ${{S_{{p_i}}}}$ into equation (\ref{eq:SSim}), we can also extract the protein Sequence Similarity kernels ${\bf{K}}_p^{SS}$.
 
-\subsubsection*{Gaussian Interaction Profile Kernels for LncRNAs and proteins}
+\subsubsection*{Gaussian interaction profile kernels for lncRNAs and proteins}
 The Gaussian Interaction Profile (GIP) kernel actually is a measurement of network topology similarity\cite{VanLaarhoven2011}, which can be calculated through the lncRNA-protein interaction profile. lncRNA GIP kernel ${\bf{K}}_l^{GIP}$ is calculated as equation (\ref{eq:GIP_sim}):
 \begin{equation} \label{eq:GIP_sim}
 {\bf{K}}_l^{GIP}({l_i},{l_j}) = \exp ( - {\gamma _l}{\left\| {{\bf{IP}}({l_i}) - {\bf{IP}}({l_j})} \right\|^2})
@@ -269,37 +307,31 @@ where vector ${{\bf{IP}}({l_i})}$ represents the interaction profile for lncRNA 
  {\vphantom {{{{\gamma '}_l}} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{\bf{IP}}({l_i})} \right\|}^2}} )}}} \right.
  \kern-\nulldelimiterspace} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{\bf{IP}}({l_i})} \right\|}^2}} )}}$, where ${\gamma '}$ are usually set to 1.
 
-\subsubsection*{Expression Kernel for lncRNAs}
-The lncRNA Expression profiles are obtained from the database NONCODE, each of which is represented as a 24-dimension vector, corresponding to 24 cell types. At last, the lncRNA Expression kernel ${\bf{K}}_l^{Exp}$ can also be extracted by the Radial Basis Function as in the literature\cite{Buhmann2004RadialImplementations}.
+\subsubsection*{Expression kernel for lncRNAs}
+The lncRNA Expression profiles are obtained from the database NONCODE, each of which is represented as a 24-dimension vector, corresponding to 24 cell types. At last, the lncRNA Expression kernel ${\bf{K}}_l^{Exp}$ can also be extracted by the Radial Basis Function as in the literature\cite{Buhmann2004}.
 
-\subsubsection*{GO Kernel for Proteins}
+\subsubsection*{GO kernel for proteins}
 Gene ontology (GO) describes biomolecules or gene products in terms of biological processes, molecular functions and cellular components. GO has become a commonly used protein feature in interaction prediction models. We downloaded GO terms from the database GOA\cite{Wan2013} to measure GO similarity between two proteins. Jaccard similarity, namely the overlap ratio of GO terms related to two proteins, is used to computed GO kernels of two proteins ${\bf{K}}_p^{GO}$ as equation (\ref{eq:GO_kernel}).
 \begin{equation}\label{eq:GO_kernel}
 {\bf{K}}_p^{GO}({p_i},{p_j}) = \frac{{\left| {G{O_{{p_i}}} \cap G{O_{{p_j}}}} \right|}}{{\left| {G{O_{{p_i}}} \cup G{O_{{p_j}}}} \right|}}
 \end{equation}
 where ${G{O_{{p_i}}}}$ is the GO terms related with protein ${p_i}$, $ \cap $ is the intersection of two sets, $ \cup $ is the union of two sets.
 
-\subsection*{Multiple Kernel fusion by fast kernel learning}
-\begin{equation}
-{{\bf{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {\bf{K}}_l^i,\;\;\;{\bf{K}}_l^i \in {\Re ^{m \times m}}
-\end{equation}
+Above all, four base kernels for lncRNAs ${\bf{K}}_l^{SF}$, ${\bf{K}}_l^{SS}$, ${\bf{K}}_l^{GIP}$, ${\bf{K}}_l^{Exp}$ are generated, and four base kernels for proteins ${\bf{K}}_p^{SF}$, ${\bf{K}}_p^{SS}$, ${\bf{K}}_p^{GIP}$, ${\bf{K}}_p^{GO}$ are generated.
 
-\begin{equation}
+\subsection*{Multiple kernel fusion by fast kernel Learning}
+A variety of similarity and features can depict biological entities from different perspectives, so as to make better interaction prediction. In this paper, a linear combination strategy is used to quickly fuse multiple similarities and features\cite{He2008FastMatching,Shen2019}. A comprehensive  similarity ${{\bf{K}}_l}$ can be combined as: ${{\bf{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {\bf{K}}_l^i,\;\;\;{\bf{K}}_l^i \in {\Re ^{m \times m}}$, where ${w_l^i}$ are combination weights, $\sum\limits_{i = 1}^4 {{w_i}}=1$, and ${\bf{K}}_l^i$ are base kernels for lncRNAs. Similarly, the protein comprehensive similarity ${{\bf{K}}_p}$ also can be calculated by substituting the base kernels of proteins ${\bf{K}}_p^i \in {\Re ^{n \times n}}$ and combination weights ${w_p^i}$ into the combination equation like lncRNAs. 
+
+In the ideal state, the comprehensive similarity of fusion should satisfy ${{\bf{K}}^{ideal}} = {\bf{I}}\times{{\bf{I}}^T}$. As long as the appropriate weight ${\bf{w}}$ can be determined and the following formula $\min \left\| {{\bf{K}} - {{\bf{K}}^{ideal}}} \right\|_F^2$ can be satisfied, the goal of multi-kernel fusion can be achieved. In order to avoid over-fitting, a regularization term $\lambda {\left\| {\bf{w}} \right\|^2}$ is added in the fusion process, and the objective function can be transformed into the equation (\ref{eq:fusionObjection}):
+\begin{equation}\label{eq:fusionObjection}
 \begin{array}{l}
 \mathop {\min }\limits_{{\bf{w,K}}} \;\left\| {{\bf{K}} - {{\bf{K}}^{ideal}}} \right\|_F^2 + \lambda {\left\| {\bf{w}} \right\|^2}\\
-\;s.t.\;\;\sum\limits_{i = 1}^4 {{w^i}}  = 1
+\;s.t.\;\;\sum\limits_{i = 1}^4 {{w_i}}  = 1
 \end{array}
 \end{equation}
+where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${\bf{K}}$ represents ${{\bf{K}}_l}$ or ${{\bf{K}}_p}$, whose members ${{\bf{K}}_l^i}$ or ${{\bf{K}}_p^i}$ are base kernels of lncRNAs or proteins. ${\bf{w}}$ represents vector ${{\bf{w}}_l}$ or vector ${{\bf{w}}_p}$, whose members are combination weights $w_l^i$ or $w_p^i$. The tradeoff parameter $\lambda$ is initialed to 2000 in this study. We call the Matlab tool function CVX to optimize the combination weights {\bf{w}} and get the comprehensive similarity ${\bf{K}}$ for lncRNAs and proteins, respectively.  
 
-\begin{equation}
-\begin{array}{l}
-\mathop {\min }\limits_{\bf{w}} {{\bf{w}}^T}({\bf{A}} + \lambda {\bf{I}}){\bf{w}} - 2{{\bf{b}}^T}{\bf{w}}{\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} {\kern 1pt} \\
-\;\;s.t.{\kern 1pt} \;\;\sum\limits_{i{\rm{ = 1}}}^{\rm{4}} {{w^i} = 1} 
-\end{array}
-\end{equation}
-where ${A_{u,v}} = tr({\bf{K}}_u^T{{\bf{{\rm K}}}_v})$, ${b_v} = tr({{\bf{Y}}^T}{{\bf{K}}_v})$
-
-\subsection*{Encoding by multi-layer Graph Convolution Network}
+\subsection*{Encoding by multi-layer graph convolution network}
 
 \begin{equation}
 {H^{(0)}} = \left[ {\begin{array}{*{20}{c}}
@@ -340,7 +372,6 @@ x_i^{(l + 1)} = f(y_i^{(l + 1)})
 \end{equation}
 Compared with the full connection layer (MLP), the most basic network structure of the neural network, the feature matrix is multiplied by the weight matrix, and the graph neural network has an adjacency matrix
 
-
 \subsection*{Decoding and prediction}
 
 \begin{equation}
@@ -349,21 +380,21 @@ A' = sigmoid({H_L}W'H_P^T)
 where $W' \in {\Re ^{k \times k}}$
 
 
-
 \bibliography{mendeley}
 
 \section*{Acknowledgements (not compulsory)}
-
-Acknowledgements should be brief, and should not include thanks to anonymous referees and editors, or effusive comments. Grant or contribution numbers may be acknowledged.
+This work was supported by the National Nature Science Foundation of China (Grant Nos. 61702054 and 62072169), the National Key Research and Development Program (Grant Nos. 2017YFC1311003), and the Training Program for Excellent Young Innovators of Changsha (Grant No. kq2009093).
 
 \section*{Author contributions statement}
-
-Must include all authors, identified by initials, for example:
-A.A. conceived the experiment(s),  A.A. and B.A. conducted the experiment(s), C.A. and D.A. analysed the results.  All authors reviewed the manuscript. 
+W.L., S.W. and H.G. conceptualized the work and planned the procedure of experiments; H.G. collected the data; W.L. implemented all the experiments, analysed the results, and drafted the manuscript. All the authors have read and supported the final edition. 
 
 \section*{Additional information}
+To include, in this order: 
 
-To include, in this order: \textbf{Accession codes} (where applicable); \textbf{Competing interests} (mandatory statement). 
+\textbf{Access code} (where applicable); 
+All the datasets collected in this study and codes available are included in GitHub: https://github.com/vivian457/LPI-FKLGCN.
+
+\textbf{Competing interests: All authors declare no competing interests.} (mandatory statement). 
 
 The corresponding author is responsible for submitting a \href{http://www.nature.com/srep/policies/index.html#competing}{competing interests statement} on behalf of all authors of the paper. This statement must be included in the submitted article file.
 \end{document}

@@ -61,9 +61,9 @@ Considering the importance of features extracted from sequence information, simi
 %%实验环境交代清楚
 The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
 
-The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
+In our experiments, we adopted 5-fold cross-validation (5-CV)
+to evaluate the performances of prediction methods. All known drug–disease associations are randomly split into five equalsized subsets. The cross-validation process is repeated fives times, and every subset is used as the testing set in turn while the remaining four subsets are used as the training set. In each fold, a prediction model is constructed on known associations in the training set and is used to predict associations in the testing set. We adopt the AUPR and the AUC as primary metrics, for they can measure the performances of methods without any specific threshold. Besides, the threshold-based metrics are also calculated, i.e. recall (also known as sensitivity), specificity, ACC, precision and F1-measure (F1).
 
-The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
 
 \begin{table}[ht]
 \centering
@@ -87,14 +87,11 @@ Novel_Dataset & 1050 & 84 & 4467 \\
 \subsection*{2.2 Parametric impact analysis}
 As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
 
+LAGCN makes use of the drug–disease heterogeneous network to build the prediction model. The drug–disease heterogeneous network consists of known drug–disease associations, drug–drug similarities and disease–disease similarities. Since we consider five types of drug features and two similarity measures, we can train LAGCN on different heterogeneous networks based on different drug–drug similarities, and then discuss how these drug–drug similarities influence the performances of LAGCN.
+LAGCN models based on heterogeneous networks with different drug–drug similarities are evaluated by 5-CV on the main dataset, and the corresponding results are displayed in Table 2.
+Jaccard index leads to slightly better results than Cosine similarity measure, and similarities based on different features produce similar performances. These results indicate that LAGCN is robust, regardless of similarity measures and drug features. Drug target-based similarities (by both Jaccard index and Cosine similarity) leads to the highest AUPR score. Moreover, we only use the drug–disease associations to construct the network, and then build a reduced version of LAGCN based on this network, named as LAGCN-NH. According to Table 2, LAGCN-NH produces lower AUPR score and AUC score than all LAGCN models, which demonstrates that the drug–drug similarities and disease–disease similarities in the heterogeneous network contain useful information and lead to the improved performances of LAGCN.
 
-As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
-
-
-As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
-
-
-As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
+We also integrate different drug feature-based similarities using two simple strategies, and build LAGCN models. The average similarity strategy calculates the average of drug–drug similarities based on different features to obtain the integrated similarities. The concatenated feature-based similarity strategy firstly concatenate different drug feature vectors and then calculate drug–drug similarities based on the concatenated feature vectors. The results in Table 2 show that integrating different drug feature-based similarities do not necessarily lead to improved performances. The possible reason is that the known drug–disease associations make the major contribution to the prediction, and drug features bring supplementary information but have redundant information between them. Based on the above discussion, we adopt the target-based drug–drug similarities calculated by the Jaccard index, MeSHbased disease–disease similarities and drug–disease associations to construct the heterogeneous network and then build the LAGCN models in the following study
 
 \begin{figure}[ht]
 \centering
@@ -131,7 +128,7 @@ The impact of fast kernel learning and multi-layer graph convolution layers are 
 \hline
 Dataset & Models & AUPR & AUC &	F1_score & Accuracy	& Recall & Specificity & Precision\\
 \hline
-\multirow{4}{6em}{Benchmark Dataset} 
+\multirow{4}{5em}{Benchmark Dataset} 
 & Fuse_AVG\tnote{1} & 0.2795 & 0.8736 & 0.2891 & 0.9220 & 0.4464 & 0.9395 & 0.2138\\
 & Fuse_SNF\tnote{2} & 0.3434	& 0.8874 & 0.3737	& 0.9351 & 0.5451	& 0.9494 & 0.2843\\
 & GCN with 1 layer conv & 0.5504 & 0.9476 & 0.5367 & 0.9628 & 0.6064 & 0.9759 & 0.4813\\ 
@@ -225,6 +222,10 @@ The results of comparison with the state-of-the-art methods are shown in the Fig
 
 \subsection*{2.6 Case study}
 TOP 10 predicted proteins for lncRNA NONHSAT145960 and TOP 10 predicted lncRNAs for protein ENSP00000401371 as shown in Table \ref{tab:caseStudy1}
+
+In this section, we build an LAGCN model using all drug–disease associations and then predict novel associations. Because all known associations have been used to construct the prediction model, the predicted associations require verification by public literature or other available sources. Top 10 drug–disease associations predicted by LAGCN are listed in Table 6, and we can find evidence to confirm five out of them. For example, tamoxifen is capable of prolonging the lives of premenopausal women with breast cancer and decreasing the probability of recurrence, but it led to acute depression symptoms in a 34-year-old breast cancer patient [53]. Dexamethasone is a type of corticosteroid medication. It was used in the treatment of many conditions, including rheumatic problems, several skin diseases, severe allergies, asthma, chronic obstructive lung disease, croup, brain swelling, ocular pain following ophthalmic surgery and antibiotics in tuberculosis. It was also used as a direct chemotherapeutic agent in the treatment of multiple myeloma, in which dexamethasone is given in combination with lenalidomide [54].
+Furthermore, we check upon the top 10 candidate diseases for carbamazepine and the top 10 candidate drugs for breast neoplasms. Table 7 shows the results of our experiments, and some of the predictions can be confirmed. For example, carbamazepine is an anticonvulsant medication used primarily in the treatment of epilepsy and neuropathic pain, but De Sarro et al. [55] have proved that carbamazepine also leads to movement disorders by potentiating the anticonvulsant activity in the DBA/2 mice animal model. Breast cancer is the leading type of cancer in women, accounting for 25 $\%$ of all cases according to Wikipedia, and countless researchers have been devoting themselves to finding treatment of it. According to Tsai et al. [56], tamoxifen and fulvestrant are widely used therapeutic agents and are considered to alter estrogen receptor (ER) signaling in ER-positive breast cancers.
+
 \begin{table}[ht]
 \centering
 \caption{\label{tab:caseStudy1} The results of case study for LPIs and novel lncRNA prediction. (350 words max). Example legend text.}
@@ -284,9 +285,15 @@ First of all, LPI-FKLGCN model obtains rich information about lncRNAs and protei
 First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
 
 \section*{Methods}
+\subsection*{Construction of a heterogeneous lncRNA-protein network}
+In order to make more accurate prediction, the LPI-FKLGCN model makes full use of multi-source information, such as known lncRNA-protein interaction, lncRNA and protein sequence, lncRNA expression profile and protein GO to generate multiple similarity kernels and feature kernels. The base kernels will be combined to a comprehensive similarity matrix by the fast kernel fusion. The heterogeneous lncRNA-protein network is constructed by a lncRNA-protein interaction network, a lncRNA comprehensive similarity network and a protein comprehensive similarity network. Assume that matrix ${\bf{I}} \in {\Re ^{m \times n}}$ represents the adjacency matrix for lncRNA-protein interaction network. If there is an interaction between lncRNA ${{l_i}}$ and protein ${{p_j}}$, ${\bf{I}}(i,j)$ assigns 1, otherwise it assigns 0. $1 \le i \le m$, $1 \le j \le n$, $m$, $n$ are the number of lncRNAs and proteins in the interaction profile. The adjacency matrix of the comprehensive similarity networks are respectively denoted as ${{\bf{K}}_l}$ and ${{\bf{K}}_p}$. At last, the adjacency matrix of the heterogeneous network ${{\bf{I}}_H}$ can be defined as equation (\ref{eq:adjmatrix}):
+\begin{equation}\label{eq:adjmatrix}
+{{\bf{I}}_H} = \left[ {\begin{array}{*{20}{c}}
+{{{\bf{K}}_l}}&{\bf{I}}\\
+{{{\bf{I}}^T}}&{{{\bf{K}}_p}}
+\end{array}} \right] \in {\Re ^{(m + n) \times (m + n)}}
+\end{equation}
 \subsection*{Generate multiple kernels for lncRNAs and proteins}
-In order to make more accurate prediction, the LPI-FKLGCN model makes full use of multi-source information, such as known lncRNA-protein interaction, lncRNA and protein sequence, lncRNA expression profile and protein GO to generate multiple similarity kernels and feature kernels. Assume that matrix ${\bf{I}} \in {\Re ^{m \times n}}$ represents the adjacency matrix for lncRNA-protein interaction. If there is an interaction between lncRNA ${{l_i}}$ and protein ${{p_j}}$, ${\bf{I}}(i,j)$ assigns 1, otherwise it assigns 0. $1 \le i \le m$, $1 \le j \le n$, $m$, $n$ are the number of lncRNAs and proteins in the interaction profile.
-
 \subsubsection*{Sequence feature kernels for lncRNAs and proteins}
 We extracted the sequence features of lncRNAs and proteins by the same way as in the previous literature \cite{Shen2019}. The lncRNA sequences are expressed by Conjoint Triad, and the protein sequences are expressed by Pseudo Position-Specific Score Matrix. Then, the Sequence Feature kernels ${\bf{K}}_l^{SF}$ and ${\bf{K}}_p^{SF}$ can be extracted by the Radial Basis Function (RBF) kernel.
 
@@ -319,8 +326,8 @@ where ${G{O_{{p_i}}}}$ is the GO terms related with protein ${p_i}$, $ \cap $ is
 
 Above all, four base kernels for lncRNAs ${\bf{K}}_l^{SF}$, ${\bf{K}}_l^{SS}$, ${\bf{K}}_l^{GIP}$, ${\bf{K}}_l^{Exp}$ are generated, and four base kernels for proteins ${\bf{K}}_p^{SF}$, ${\bf{K}}_p^{SS}$, ${\bf{K}}_p^{GIP}$, ${\bf{K}}_p^{GO}$ are generated.
 
-\subsection*{Multiple kernel fusion by fast kernel Learning}
-A variety of similarity and features can depict biological entities from different perspectives, so as to make better interaction prediction. In this paper, a linear combination strategy is used to quickly fuse multiple similarities and features\cite{He2008FastMatching,Shen2019}. A comprehensive  similarity ${{\bf{K}}_l}$ can be combined as: ${{\bf{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {\bf{K}}_l^i,\;\;\;{\bf{K}}_l^i \in {\Re ^{m \times m}}$, where ${w_l^i}$ are combination weights, $\sum\limits_{i = 1}^4 {{w_i}}=1$, and ${\bf{K}}_l^i$ are base kernels for lncRNAs. Similarly, the protein comprehensive similarity ${{\bf{K}}_p}$ also can be calculated by substituting the base kernels of proteins ${\bf{K}}_p^i \in {\Re ^{n \times n}}$ and combination weights ${w_p^i}$ into the combination equation like lncRNAs. 
+\subsection*{Comprehensive similarity network by fast kernel learning}
+A variety of similarity and features can depict biological entities from different perspectives, so as to make better interaction prediction. In this paper, a linear combination strategy is used to quickly fuse multiple similarities and features\cite{He2008,Shen2019}. A comprehensive  similarity ${{\bf{K}}_l}$ can be combined as: ${{\bf{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {\bf{K}}_l^i,\;\;\;{\bf{K}}_l^i \in {\Re ^{m \times m}}$, where ${w_l^i}$ are combination weights, $\sum\limits_{i = 1}^4 {{w_i}}=1$, and ${\bf{K}}_l^i$ are base kernels for lncRNAs. Similarly, the protein comprehensive similarity ${{\bf{K}}_p}$ also can be calculated by substituting the base kernels of proteins ${\bf{K}}_p^i \in {\Re ^{n \times n}}$ and combination weights ${w_p^i}$ into the combination equation like lncRNAs. 
 
 In the ideal state, the comprehensive similarity of fusion should satisfy ${{\bf{K}}^{ideal}} = {\bf{I}}\times{{\bf{I}}^T}$. As long as the appropriate weight ${\bf{w}}$ can be determined and the following formula $\min \left\| {{\bf{K}} - {{\bf{K}}^{ideal}}} \right\|_F^2$ can be satisfied, the goal of multi-kernel fusion can be achieved. In order to avoid over-fitting, a regularization term $\lambda {\left\| {\bf{w}} \right\|^2}$ is added in the fusion process, and the objective function can be transformed into the equation (\ref{eq:fusionObjection}):
 \begin{equation}\label{eq:fusionObjection}
@@ -329,9 +336,23 @@ In the ideal state, the comprehensive similarity of fusion should satisfy ${{\bf
 \;s.t.\;\;\sum\limits_{i = 1}^4 {{w_i}}  = 1
 \end{array}
 \end{equation}
-where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${\bf{K}}$ represents ${{\bf{K}}_l}$ or ${{\bf{K}}_p}$, whose members ${{\bf{K}}_l^i}$ or ${{\bf{K}}_p^i}$ are base kernels of lncRNAs or proteins. ${\bf{w}}$ represents vector ${{\bf{w}}_l}$ or vector ${{\bf{w}}_p}$, whose members are combination weights $w_l^i$ or $w_p^i$. The tradeoff parameter $\lambda$ is initialed to 2000 in this study. We call the Matlab tool function CVX to optimize the combination weights {\bf{w}} and get the comprehensive similarity ${\bf{K}}$ for lncRNAs and proteins, respectively.  
+where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${\bf{K}}$ represents ${{\bf{K}}_l}$ or ${{\bf{K}}_p}$, whose members ${{\bf{K}}_l^i}$ or ${{\bf{K}}_p^i}$ are base kernels of lncRNAs or proteins. {\bf{w}} represents vector ${{\bf{w}}_l}$ or vector {{\bf{w}}_p}, whose members are combination weights $w_l^i$ or $w_p^i$. The tradeoff parameter $\lambda$ is initialed to 2000 in this study. We call the Matlab tool function CVX to optimize the combination weights {\bf{w}} and get the comprehensive similarity {\bf{K}} for lncRNAs and proteins, respectively.  
 
 \subsection*{Encoding by multi-layer graph convolution network}
+The graph convolutional network (GCN) which extends Convolutional Neural Networks into graph architecture has been applied in biological information processing and achieved excellent performance. For example, %GCN has been used in the polypharmacy side effects prediction\cite{Zitnik2018},
+microbe-drug association prediction\cite{Long2020d}, computational drug discovery\cite{Sun2020b} and drug-disease association prediction\cite{Yu2020d}.
+We first construct a heterogeneous network integrating the lncRNA comprehensive similarity network, the protein comprehensive similarity network and known lncRNA-protein interaction. Then, we apply the multi-layer graph convolution network to generate the embedding representation vectors of lncRNAs and proteins. The combination of multi-layer embedding can integrate proximity of different order to improve the next prediction. 
+
+\begin{equation}
+{H^{(l + 1)}} = f({H^{(l)}},G) = \sigma ({D^{ - \frac{1}{2}}}G{D^{ - \frac{1}{2}}}{H^{(l)}}{W^{(l)}})
+\end{equation}
+
+\begin{equation}
+G = \left[ {\begin{array}{*{20}{c}}
+{\mu  \sim {K_l}}&A\\
+{{A^T}}&{\mu  \sim {K_p}}
+\end{array}} \right]
+\end{equation}
 
 \begin{equation}
 {H^{(0)}} = \left[ {\begin{array}{*{20}{c}}
@@ -343,6 +364,7 @@ where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${\bf{K}}$ repre
 \begin{equation}
 {H^{(1)}} = \sigma ({D^{ - \frac{1}{2}}}G{D^{ - \frac{1}{2}}}{H^{(0)}}{W^{(0)}})
 \end{equation}
+
 
 \begin{equation}
 \left[ {\begin{array}{*{20}{c}}

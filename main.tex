@@ -45,7 +45,7 @@ Traditional high-throughput biological methods consume a lot of manpower and mat
 With the development of sequencing technology, LPI information is gradually enriched. The second class LPI prediction method is to combine known LPI information with multi-source lncRNA (protein) data that can be used to extract features and measure similarities. The known interaction information has proved to be very important in interaction prediction. It is hypothesized that if a lncRNA (protein) is similar to one side of the interacting lncRNA-protein pair, it may also interact with the other side of the interacting lncRNA-protein pair. Therefore, similarity calculation is also very important. For example, Zhang et al. have proposed a Sequence-Based Feature Projection Ensemble Learning Method (SFPEL-LPI), which combines multiple similarities and multiple features based on sequence extraction into a feature projection ensemble learning framework to improve the prediction performance\cite{Zhang2018SFPEL-LPI:Interactions}.
 Zhao et al. have proposed an algorithm of bipartite network-based projection recommendation for LPI prediction (LPI-BNPRA) which is a semi-supervised method integrating similarities and known interaction knowledge\cite{zhao2018bipartite}. To solve the problem of the lack of negative samples, Zhao et al. also integrate random walk based on network and logical matrix factorization based on semi-supervised machine learning with regularization, which assigns high weights to the nearest neighbours, thereby avoiding noisy\cite{Zhao2018}. Shen et al. have proposed a typical semi-supervised machine learning-based model (LPI-FKLKRR) to identify the potential LPIs, which optimizes the weights of combination by Fast Kernel Learning (FaseKL) and obtain the predicted associations by the Kernel Ridge Regression (KRR)\cite{Shen2019}. Since there are now a limited number of LPIs, some methods have emerged that can be predicted without direct LPIs. Zhou et al. have explored the selection of miRNAs as mediators to establish a heterogeneous network to estimate the potential interactions between lncRNAs and proteins. This model requires no direct prior lncRNA to interact with the protein\cite{Zhou2020PredictingModel}. In recent years, with the development of deep learning methods such as deep neural network and graph neural network, more research efforts are now being put into developing methods that combine machine learning and deep learning to improve predictive performance. For example, Fan et al. have proposed a new computational model LPI-BLS, which integrates a deep learning-based broad learning system with ensemble logistical regression classifiers to predict LPIs \cite{Fan2019LPI-BLS:Classifier}.
 
-Considering the importance of features extracted from sequence information, similarity measurement and known LPI information in previous studies, a new prediction model is proposed in this study, which can not only extract the features of lncRNAs and proteins from multi-source biological data including sequences, lncRNA expression profile and protein Gene Ontology (GO). At the same time, lncRNA-lncRNA and protein-protein similarity are calculated from different perspectives according to different similarity measurement methods. The fast kernel learning method (FKL) based on machine learning is used to fuse these features and similarities respectively to obtain a lncRNA comprehensive similarity and a protein comprehensive similarity. Besides, the comprehensive similarity matrices obtained by the previous fusion of multi-source information and the known lncRNA-protein interaction are sent into the Graph Convolutional Network (GCN) model based on deep learning to extract the two groups of embedding representation vectors, and finally, the LPI probability score matrix is obtained through a decoder. Compared with other baseline methods and the latest methods, the LPI-FKLGCN model performs better. Through case analysis, the proteins and lncRNAs that may be associated with specific lncRNAs can be predicted respectively, and at the same time, the new lncRNAs can be effectively predicted. The overall framework of the LPI-FKLGCN model is illustrated in Figure \ref{fig:fig1}.
+Considering the importance of features extracted from sequence information, similarity measurement and known LPI information in previous studies, a new prediction model is proposed in this study, which can not only extract the features of lncRNAs and proteins from multi-source biological data including sequences, lncRNA expression profile and protein Gene Ontology (GO). At the same time, lncRNA-lncRNA and protein-protein similarity are calculated from different perspectives according to different similarity measurement methods. The fast kernel learning method (FKL) based on machine learning is used to fuse these features and similarities respectively to obtain a lncRNA comprehensive similarity and a protein comprehensive similarity. Besides, the comprehensive similarity matrices obtained by the previous fusion of multi-source information and the known lncRNA-protein interaction are sent into the Graph Convolutional Network (GCN) model based on deep learning to extract the two groups of embedding representation vectors, and finally, the LPI probability score matrix is obtained through a decoder. Compared with other baseline methods and the latest methods, the LPI-FKLGCN model performs better. Through case analysis, the proteins and lncRNAs that may be associated with specific lncRNAs can be predicted respectively, and at the same time, the new lncRNAs can be effectively predicted. The workflow of our model LPI-FKLGCN is illustrated in Figure \ref{fig:fig1}.
 
 \begin{figure}[ht]
 \centering
@@ -58,8 +58,9 @@ Considering the importance of features extracted from sequence information, simi
 
 \section*{Results}
 \subsection*{2.1 Experimental environment and datasets}
-%%实验环境交代清楚
-The two lncRNA-protein interaction datasets used in this study are from previous literature researched by Zhang\cite{Zhang2018}  and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
+The two lncRNA-protein interaction datasets used in this study are from previous literature studied by Zhang\cite{Zhang2018} and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
+
+
 
 In our experiments, we adopted 5-fold cross-validation (5-CV)
 to evaluate the performances of prediction methods. All known drug–disease associations are randomly split into five equalsized subsets. The cross-validation process is repeated fives times, and every subset is used as the testing set in turn while the remaining four subsets are used as the training set. In each fold, a prediction model is constructed on known associations in the training set and is used to predict associations in the testing set. We adopt the AUPR and the AUC as primary metrics, for they can measure the performances of methods without any specific threshold. Besides, the threshold-based metrics are also calculated, i.e. recall (also known as sensitivity), specificity, ACC, precision and F1-measure (F1).
@@ -85,6 +86,14 @@ Novel_Dataset & 1050 & 84 & 4467 \\
 \end{table}
 
 \subsection*{2.2 Parametric impact analysis}
+the learning rate $\upsilon$, 
+the total training epochs (*100)= $\kappa$,
+two dropout rates (node dropout $\beta$ and regular dropout $\gamma$)
+the penalty factor $\mu$ in the heterogeneous network.  
+By adjusting the parameters empirically,
+we set the dimensionality of embeddings k = 64, the number of layers H = 3, 
+$\upsilon$ = 0.01, iteration time $\kappa$ = 40, $\beta$ = 0.4, $\gamma$ = 0.6 and $\mu$ = 6 for LPI-FKLGCN in the following experiments
+
 As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
 
 LAGCN makes use of the drug–disease heterogeneous network to build the prediction model. The drug–disease heterogeneous network consists of known drug–disease associations, drug–drug similarities and disease–disease similarities. Since we consider five types of drug features and two similarity measures, we can train LAGCN on different heterogeneous networks based on different drug–drug similarities, and then discuss how these drug–drug similarities influence the performances of LAGCN.
@@ -285,134 +294,107 @@ First of all, LPI-FKLGCN model obtains rich information about lncRNAs and protei
 First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
 
 \section*{Methods}
+In this section, we first construct a heterogeneous network integrating the lncRNA comprehensive similarity network, the protein comprehensive similarity network and known lncRNA-protein interaction network. Then, we generate multiple kernels for lncRNAs and proteins, and fuse these base kernels into a lncRNA comprehensive similarity and a protein comprehensive similarity, respectively. Thirdly, we deploy the multi-layer graph convolution network on the constructed heterogeneous network so as to generate the embedding representation vectors for lncRNAs and proteins. The combination of multi-layer embedding can integrate proximity of different order to improve the next prediction. Finally, the predicted lncRNA-protein interaction probability matrix is obtained by decoding. 
+
 \subsection*{Construction of a heterogeneous lncRNA-protein network}
-In order to make more accurate prediction, the LPI-FKLGCN model makes full use of multi-source information, such as known lncRNA-protein interaction, lncRNA and protein sequence, lncRNA expression profile and protein GO to generate multiple similarity kernels and feature kernels. The base kernels will be combined to a comprehensive similarity matrix by the fast kernel fusion. The heterogeneous lncRNA-protein network is constructed by a lncRNA-protein interaction network, a lncRNA comprehensive similarity network and a protein comprehensive similarity network. Assume that matrix ${\bf{I}} \in {\Re ^{m \times n}}$ represents the adjacency matrix for lncRNA-protein interaction network. If there is an interaction between lncRNA ${{l_i}}$ and protein ${{p_j}}$, ${\bf{I}}(i,j)$ assigns 1, otherwise it assigns 0. $1 \le i \le m$, $1 \le j \le n$, $m$, $n$ are the number of lncRNAs and proteins in the interaction profile. The adjacency matrix of the comprehensive similarity networks are respectively denoted as ${{\bf{K}}_l}$ and ${{\bf{K}}_p}$. At last, the adjacency matrix of the heterogeneous network ${{\bf{I}}_H}$ can be defined as equation (\ref{eq:adjmatrix}):
+In order to make more accurate prediction, the LPI-FKLGCN model makes full use of multi-source information, such as known lncRNA-protein interaction, lncRNA and protein sequence, lncRNA expression profile and protein GO to generate multiple similarity kernels and feature kernels. The base kernels will be combined to a comprehensive similarity matrix by the fast kernel fusion. The heterogeneous lncRNA-protein network is constructed by a lncRNA-protein interaction network, a lncRNA comprehensive similarity network and a protein comprehensive similarity network. Assume that matrix ${{I}} \in {\Re ^{m \times n}}$ represents the adjacency matrix for lncRNA-protein interaction network. If there is an interaction between lncRNA ${{l_i}}$ and protein ${{p_j}}$, ${{I}}(i,j)$ assigns 1, otherwise it assigns 0. $1 \le i \le m$, $1 \le j \le n$, $m$, $n$ are the number of lncRNAs and proteins in the interaction profile. The adjacency matrix of the comprehensive similarity networks are respectively denoted as ${{{K}}_l}$ and ${{{K}}_p}$. At last, the adjacency matrix of the heterogeneous network ${A^ \sim }$ can be defined as equation (\ref{eq:adjmatrix}):
 \begin{equation}\label{eq:adjmatrix}
-{{\bf{I}}_H} = \left[ {\begin{array}{*{20}{c}}
-{{{\bf{K}}_l}}&{\bf{I}}\\
-{{{\bf{I}}^T}}&{{{\bf{K}}_p}}
+{A^ \sim } = \left[ {\begin{array}{*{20}{c}}
+{{{{K}}_l}}&{{I}}\\
+{{{{I}}^T}}&{{{{K}}_p}}
 \end{array}} \right] \in {\Re ^{(m + n) \times (m + n)}}
 \end{equation}
 \subsection*{Generate multiple kernels for lncRNAs and proteins}
 \subsubsection*{Sequence feature kernels for lncRNAs and proteins}
-We extracted the sequence features of lncRNAs and proteins by the same way as in the previous literature \cite{Shen2019}. The lncRNA sequences are expressed by Conjoint Triad, and the protein sequences are expressed by Pseudo Position-Specific Score Matrix. Then, the Sequence Feature kernels ${\bf{K}}_l^{SF}$ and ${\bf{K}}_p^{SF}$ can be extracted by the Radial Basis Function (RBF) kernel.
+We extracted the sequence features of lncRNAs and proteins by the same way as in the previous literature \cite{Shen2019}. The lncRNA sequences are expressed by Conjoint Triad, and the protein sequences are expressed by Pseudo Position-Specific Score Matrix. Then, the Sequence Feature kernels ${{K}}_l^{SF}$ and ${{K}}_p^{SF}$ can be extracted by the Radial Basis Function (RBF) kernel.
 
 \subsubsection*{Sequence similarity kernels for lncRNAs and proteins}
-The lncRNA Sequence Similarity (SS) kernels ${\bf{K}}_l^{SS}$ can be calculated by normalized Smith-Watermark (SW) score as\cite{Shen2019}
+The lncRNA Sequence Similarity (SS) kernels ${{K}}_l^{SS}$ can be calculated by normalized Smith-Watermark (SW) score as\cite{Shen2019}
 \begin{equation}
-{\bf{K}}_l^{SS}({l_i},{l_j}) = \frac{{SW({S_{{l_i}}},{S_{{l_j}}})}}{{\sqrt {SW({S_{{l_i}}},{S_{{l_j}}})SW({S_{{l_i}}},{S_{{l_j}}})} }} \label{eq:SSim}
+{{K}}_l^{SS}({l_i},{l_j}) = \frac{{SW({S_{{l_i}}},{S_{{l_j}}})}}{{\sqrt {SW({S_{{l_i}}},{S_{{l_j}}})SW({S_{{l_i}}},{S_{{l_j}}})} }} \label{eq:SSim}
 \end{equation}
-where ${{S_{{l_i}}}}$ denotes the sequence of lncRNA ${l_i}$, $SW( \cdot )$ represents the Smith-Watermark score. Similarly, if we put protein sequences ${{S_{{p_i}}}}$ into equation (\ref{eq:SSim}), we can also extract the protein Sequence Similarity kernels ${\bf{K}}_p^{SS}$.
+where ${{S_{{l_i}}}}$ denotes the sequence of lncRNA ${l_i}$, $SW( \cdot )$ represents the Smith-Watermark score. Similarly, if we put protein sequences ${{S_{{p_i}}}}$ into equation (\ref{eq:SSim}), we can also extract the protein Sequence Similarity kernels ${{K}}_p^{SS}$.
 
 \subsubsection*{Gaussian interaction profile kernels for lncRNAs and proteins}
-The Gaussian Interaction Profile (GIP) kernel actually is a measurement of network topology similarity\cite{VanLaarhoven2011}, which can be calculated through the lncRNA-protein interaction profile. lncRNA GIP kernel ${\bf{K}}_l^{GIP}$ is calculated as equation (\ref{eq:GIP_sim}):
+The Gaussian Interaction Profile (GIP) kernel actually is a measurement of network topology similarity\cite{VanLaarhoven2011}, which can be calculated through the lncRNA-protein interaction profile. lncRNA GIP kernel ${{K}}_l^{GIP}$ is calculated as equation (\ref{eq:GIP_sim}):
 \begin{equation} \label{eq:GIP_sim}
-{\bf{K}}_l^{GIP}({l_i},{l_j}) = \exp ( - {\gamma _l}{\left\| {{\bf{IP}}({l_i}) - {\bf{IP}}({l_j})} \right\|^2})
+{{K}}_l^{GIP}({l_i},{l_j}) = \exp ( - {\gamma _l}{\left\| {{IP}({l_i}) - {IP}({l_j})} \right\|^2})
 \end{equation}
-where vector ${{\bf{IP}}({l_i})}$ represents the interaction profile for lncRNA $l_i$, which actually is the ith row vector of the interaction matrix ${\bf{I}}$. It represents whether there is a interacting protein with the lncRNA $l_i$. Similarly, vector ${{\bf{IP}}({p_i})}$ is the ith column vector of the matrix ${\bf{I}}$. The GIP kernel for proteins ${\bf{K}}_p^{GIP}$ can also be calculated by substituting ${{\bf{IP}}({p_i})}$ into the equation(\ref{eq:GIP_sim}).
+where vector ${{{IP}}({l_i})}$ represents the interaction profile for lncRNA $l_i$, which actually is the ith row vector of the interaction matrix ${{I}}$. It represents whether there is a interacting protein with the lncRNA $l_i$. Similarly, vector ${{{IP}}({p_i})}$ is the ith column vector of the matrix ${{I}}$. The GIP kernel for proteins ${{K}}_p^{GIP}$ can also be calculated by substituting ${{{IP}}({p_i})}$ into the equation(\ref{eq:GIP_sim}).
    ${\gamma _l}$ and ${\gamma _p}$ are parameter bandwidths, which can be calculated as: ${\gamma _l} = {{{{\gamma '}_l}} \mathord{\left/
- {\vphantom {{{{\gamma '}_l}} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{\bf{IP}}({l_i})} \right\|}^2}} )}}} \right.
- \kern-\nulldelimiterspace} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{\bf{IP}}({l_i})} \right\|}^2}} )}}$, where ${\gamma '}$ are usually set to 1.
+ {\vphantom {{{{\gamma '}_l}} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{{IP}}({l_i})} \right\|}^2}} )}}} \right.
+ \kern-\nulldelimiterspace} {(\frac{1}{m}\sum\limits_{i = 1}^m {{{\left\| {{IP}({l_i})} \right\|}^2}} )}}$, where ${\gamma '}$ are usually set to 1.
 
 \subsubsection*{Expression kernel for lncRNAs}
-The lncRNA Expression profiles are obtained from the database NONCODE, each of which is represented as a 24-dimension vector, corresponding to 24 cell types. At last, the lncRNA Expression kernel ${\bf{K}}_l^{Exp}$ can also be extracted by the Radial Basis Function as in the literature\cite{Buhmann2004}.
+The lncRNA Expression profiles are obtained from the database NONCODE, each of which is represented as a 24-dimension vector, corresponding to 24 cell types. At last, the lncRNA Expression kernel ${{K}}_l^{Exp}$ can also be extracted by the Radial Basis Function as in the literature\cite{Buhmann2004}.
 
 \subsubsection*{GO kernel for proteins}
-Gene ontology (GO) describes biomolecules or gene products in terms of biological processes, molecular functions and cellular components. GO has become a commonly used protein feature in interaction prediction models. We downloaded GO terms from the database GOA\cite{Wan2013} to measure GO similarity between two proteins. Jaccard similarity, namely the overlap ratio of GO terms related to two proteins, is used to computed GO kernels of two proteins ${\bf{K}}_p^{GO}$ as equation (\ref{eq:GO_kernel}).
+Gene ontology (GO) describes biomolecules or gene products in terms of biological processes, molecular functions and cellular components. GO has become a commonly used protein feature in interaction prediction models. We downloaded GO terms from the database GOA\cite{Wan2013} to measure GO similarity between two proteins. Jaccard similarity, namely the overlap ratio of GO terms related to two proteins, is used to computed GO kernels of two proteins ${{K}}_p^{GO}$ as equation (\ref{eq:GO_kernel}).
 \begin{equation}\label{eq:GO_kernel}
-{\bf{K}}_p^{GO}({p_i},{p_j}) = \frac{{\left| {G{O_{{p_i}}} \cap G{O_{{p_j}}}} \right|}}{{\left| {G{O_{{p_i}}} \cup G{O_{{p_j}}}} \right|}}
+{{K}}_p^{GO}({p_i},{p_j}) = \frac{{\left| {G{O_{{p_i}}} \cap G{O_{{p_j}}}} \right|}}{{\left| {G{O_{{p_i}}} \cup G{O_{{p_j}}}} \right|}}
 \end{equation}
 where ${G{O_{{p_i}}}}$ is the GO terms related with protein ${p_i}$, $ \cap $ is the intersection of two sets, $ \cup $ is the union of two sets.
 
-Above all, four base kernels for lncRNAs ${\bf{K}}_l^{SF}$, ${\bf{K}}_l^{SS}$, ${\bf{K}}_l^{GIP}$, ${\bf{K}}_l^{Exp}$ are generated, and four base kernels for proteins ${\bf{K}}_p^{SF}$, ${\bf{K}}_p^{SS}$, ${\bf{K}}_p^{GIP}$, ${\bf{K}}_p^{GO}$ are generated.
+Above all, four base kernels for lncRNAs ${{K}}_l^{SF}$, ${{K}}_l^{SS}$, ${{K}}_l^{GIP}$, ${{K}}_l^{Exp}$ are generated, and four base kernels for proteins ${{K}}_p^{SF}$, ${{K}}_p^{SS}$, ${{K}}_p^{GIP}$, ${{K}}_p^{GO}$ are generated.
 
 \subsection*{Comprehensive similarity network by fast kernel learning}
-A variety of similarity and features can depict biological entities from different perspectives, so as to make better interaction prediction. In this paper, a linear combination strategy is used to quickly fuse multiple similarities and features\cite{He2008,Shen2019}. A comprehensive  similarity ${{\bf{K}}_l}$ can be combined as: ${{\bf{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {\bf{K}}_l^i,\;\;\;{\bf{K}}_l^i \in {\Re ^{m \times m}}$, where ${w_l^i}$ are combination weights, $\sum\limits_{i = 1}^4 {{w_i}}=1$, and ${\bf{K}}_l^i$ are base kernels for lncRNAs. Similarly, the protein comprehensive similarity ${{\bf{K}}_p}$ also can be calculated by substituting the base kernels of proteins ${\bf{K}}_p^i \in {\Re ^{n \times n}}$ and combination weights ${w_p^i}$ into the combination equation like lncRNAs. 
+A variety of similarity and features can depict biological entities from different perspectives, so as to make better interaction prediction. In this paper, a linear combination strategy is used to quickly fuse multiple similarities and features\cite{He2008,Shen2019}. A comprehensive  similarity ${{{K}}_l}$ can be combined as: ${{{K}}_l} = \sum\limits_{i = 1}^4 {w_l^i} {{K}}_l^i,\;\;\;{{K}}_l^i \in {\Re ^{m \times m}}$, where ${w_l^i}$ are combination weights, $\sum\limits_{i = 1}^4 {{w_i}}=1$, and ${{K}}_l^i$ are base kernels for lncRNAs. Similarly, the protein comprehensive similarity ${{{K}}_p}$ also can be calculated by substituting the base kernels of proteins ${{K}}_p^i \in {\Re ^{n \times n}}$ and combination weights ${w_p^i}$ into the combination equation like lncRNAs. 
 
-In the ideal state, the comprehensive similarity of fusion should satisfy ${{\bf{K}}^{ideal}} = {\bf{I}}\times{{\bf{I}}^T}$. As long as the appropriate weight ${\bf{w}}$ can be determined and the following formula $\min \left\| {{\bf{K}} - {{\bf{K}}^{ideal}}} \right\|_F^2$ can be satisfied, the goal of multi-kernel fusion can be achieved. In order to avoid over-fitting, a regularization term $\lambda {\left\| {\bf{w}} \right\|^2}$ is added in the fusion process, and the objective function can be transformed into the equation (\ref{eq:fusionObjection}):
+In the ideal state, the comprehensive similarity of fusion should satisfy ${{{K}}^{ideal}} = {{I}}\times{{{I}}^T}$. As long as the appropriate weight ${w}$ can be determined and the following formula $\min \left\| {{{K}} - {{K}^{ideal}}} \right\|_F^2$ can be satisfied, the goal of multi-kernel fusion can be achieved. In order to avoid over-fitting, a regularization term $\lambda {\left\| {w} \right\|^2}$ is added in the fusion process, and the objective function can be transformed into the equation (\ref{eq:fusionObjection}):
 \begin{equation}\label{eq:fusionObjection}
 \begin{array}{l}
-\mathop {\min }\limits_{{\bf{w,K}}} \;\left\| {{\bf{K}} - {{\bf{K}}^{ideal}}} \right\|_F^2 + \lambda {\left\| {\bf{w}} \right\|^2}\\
+\mathop {\min }\limits_{{{w,K}}} \;\left\| {{{K}} - {{{K}}^{ideal}}} \right\|_F^2 + \lambda {\left\| {w} \right\|^2}\\
 \;s.t.\;\;\sum\limits_{i = 1}^4 {{w_i}}  = 1
 \end{array}
 \end{equation}
-where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${\bf{K}}$ represents ${{\bf{K}}_l}$ or ${{\bf{K}}_p}$, whose members ${{\bf{K}}_l^i}$ or ${{\bf{K}}_p^i}$ are base kernels of lncRNAs or proteins. {\bf{w}} represents vector ${{\bf{w}}_l}$ or vector {{\bf{w}}_p}, whose members are combination weights $w_l^i$ or $w_p^i$. The tradeoff parameter $\lambda$ is initialed to 2000 in this study. We call the Matlab tool function CVX to optimize the combination weights {\bf{w}} and get the comprehensive similarity {\bf{K}} for lncRNAs and proteins, respectively.  
+where ${\left\|  \cdot  \right\|_F}$ represents Frobenius norm, ${{K}}$ represents ${{{K}}_l}$ or ${{{K}}_p}$,${{{K}}_l^i}$ or ${{{K}}_p^i}$ are base kernels of lncRNAs or proteins. {w} represents ${{w}_l}$ or ${{w}_p}$, $w_l^i$ or $w_p^i$ are combination weights. The tradeoff parameter $\lambda$ is initialed to 2000 in this study. We call the Matlab tool function CVX to optimize the combination weights {{w}} and get the comprehensive similarity {K} for lncRNAs and proteins, respectively.  
 
 \subsection*{Encoding by multi-layer graph convolution network}
-The graph convolutional network (GCN) which extends Convolutional Neural Networks into graph architecture has been applied in biological information processing and achieved excellent performance. For example, %GCN has been used in the polypharmacy side effects prediction\cite{Zitnik2018},
+The graph convolutional network (GCN) which extends Convolutional Neural Networks into graph architecture has been applied in the field of biological information processing and achieved excellent performance. For example, %GCN has been used in the polypharmacy side effects prediction\cite{Zitnik2018},
 microbe-drug association prediction\cite{Long2020d}, computational drug discovery\cite{Sun2020b} and drug-disease association prediction\cite{Yu2020d}.
-We first construct a heterogeneous network integrating the lncRNA comprehensive similarity network, the protein comprehensive similarity network and known lncRNA-protein interaction. Then, we apply the multi-layer graph convolution network to generate the embedding representation vectors of lncRNAs and proteins. The combination of multi-layer embedding can integrate proximity of different order to improve the next prediction. 
-
-\begin{equation}
-{H^{(l + 1)}} = f({H^{(l)}},G) = \sigma ({D^{ - \frac{1}{2}}}G{D^{ - \frac{1}{2}}}{H^{(l)}}{W^{(l)}})
-\end{equation}
-
-\begin{equation}
+We intend to construct a encoder by GCN and launch the GCN on the heterogeneous network ${A^ \sim }$ to learn the low-dimensional representations of lncRNAs and proteins. The graph $G$ to be input into the GCN is defined as:
+\begin{equation}\label{eq:inputG}
 G = \left[ {\begin{array}{*{20}{c}}
-{\mu  \sim {K_l}}&A\\
-{{A^T}}&{\mu  \sim {K_p}}
+{\mu  \sim {K_l}}&I\\
+{{I^T}}&{\mu  \sim {K_p}}
 \end{array}} \right]
 \end{equation}
-
+where $\mu$ is a penalty factor indicating the importance of similarity in the process of information propagation. 
+The GCN encoder for processing this lncRNA-protein heterogeneous graph is defined as follows:
+\begin{equation}\label{eq:encoder}
+{V^{(l + 1)}} = f({V^{(l)}},G) = \sigma ({D_G^{ - \frac{1}{2}}}G{D_G^{ - \frac{1}{2}}}{V^{(l)}}{W^{(l)}})
+\end{equation}
+where $\sigma ( \cdot )$ is an non-linear activation function, ${V^{(h)}}$ is the output embedding representation vector of the h-layer, $W^{(h)}$ is the training weight matrix of h-layer, ${D_G} = diag(\sum\nolimits_j {{G_{ij}}} )$ is the degree matrix of graph $G$. In order to accelerate the learning process and improve the generalization performance, the exponential linear units (ELUs) are adopted as the non-linear activation function $\sigma ( \cdot )$ for all the GCN layers \cite{Clevert2016}. The initialization of the embedding presentation vector is defined as: ${V^{(0)}} = \left[ {\begin{array}{*{20}{c}} 0&I\\ {{I^T}}&0 \end{array}} \right]$. So, the h-layer of the GCN encoder can be initialized as: ${V^{(h)}} = \sigma ({D_G^{ - \frac{1}{2}}}G{D_G^{ - \frac{1}{2}}}{V^{(0)}}{W^{(0)}})$, where ${V^{(h)}} \in {\Re ^{(m + n) \times k}}$ is the h-layer embedding representation vectors of the graph $G$, parameter $k$ is the embedded dimension, and ${W^{(0)}} \in {\Re ^{(m + n) \times k}}$ is an weight matrix. For all the layers ($h=1,2,...,H$ layers) of the GCN, the propagation progress follow the equation (\ref{eq:encoder}). Each time the graph passes through one GCN layer, one set of k-dimensional embedding vectors are generated. The embedding representation vectors of different GCN layers capture different order proximity of neighbors in heterogeneous networks. To advoid over-fitting, our model adopt regular dropout $\gamma $  and node dropout $\beta $ to the GCN. The node dropout can be thought of as the training of different models on different small networks which can be integrated to predict unknown LPIs. Therefore, the GCN encoder can be converted to:
 \begin{equation}
-{H^{(0)}} = \left[ {\begin{array}{*{20}{c}}
-0&A\\
-{{A^T}}&0
-\end{array}} \right]
+{V^{(h)}} = \sigma ({D_G^{ - \frac{1}{2}}}[(1-\beta)G]{D_G^{ - \frac{1}{2}}}[(1-\gamma){V^{(0)}}]{W^{(0)}})
 \end{equation}
 
+Finally, the final embedding vectors of lncRNAs ${V_L} \in {\Re ^{m \times k}}$ and the final embedding vectors of proteins ${V_P} \in {\Re ^{n \times k}}$ are generated by the following equation: 
 \begin{equation}
-{H^{(1)}} = \sigma ({D^{ - \frac{1}{2}}}G{D^{ - \frac{1}{2}}}{H^{(0)}}{W^{(0)}})
+\left[ {\begin{array}{*{20}{c}} {{V_L}}\\ {{V_P}} \end{array}} \right] = \sum {{a_h}{V^h}}
 \end{equation}
-
-
-\begin{equation}
-\left[ {\begin{array}{*{20}{c}}
-{{H_L}}\\
-{{H_P}}
-\end{array}} \right] = \sum {{a_l}{H^l}}
-\end{equation}
-
-\begin{equation}
-y_i^{(l + 1)} = w_i^{(l + 1)}{x^{(l)}} + b_i^{(l + 1)}
-\end{equation}
-\begin{equation}
-x_i^{(l + 1)} = f(y_i^{(l + 1)})
-\end{equation}
-where f can be any activation function, for example,($f(x) = 1/(1+exp(-x))$).
-\begin{equation}
-r_j^{(l)} \sim Bernoulli(p)
-\end{equation}
-\begin{equation}
-{\bar x^{(l)}} = {r^{(l)}}*{x^{(l)}}
-\end{equation}
-\begin{equation}
-y_i^{(l + 1)} = w_i^{(l + 1)}{\bar x^{(l)}} + b_i^{(l + 1)}
-\end{equation}
-\begin{equation}
-x_i^{(l + 1)} = f(y_i^{(l + 1)})
-\end{equation}
-Compared with the full connection layer (MLP), the most basic network structure of the neural network, the feature matrix is multiplied by the weight matrix, and the graph neural network has an adjacency matrix
+where ${a_h}$ is initialized as $1/(h + 1),{\kern 1pt} {\kern 1pt} h = 1,2,...,H$ and can be learned automatically through the GCN. 
 
 \subsection*{Decoding and prediction}
-
-\begin{equation}
-A' = sigmoid({H_L}W'H_P^T)
+At last, to predict the unknown LPIs, a bi-linear activation function sigmoid is used as a decoder:
+\begin{equation} \label{eq:decoder}
+I' = sigmoid({V_L}W'V_P^T)
 \end{equation}
-where $W' \in {\Re ^{k \times k}}$
+where $W' \in {\Re ^{k \times k}}$ is a training weight matrix. $I'$ is the predicted score matrix whose member $I'(i,j)$ indicates the probability that lncRNA $l_i$ will interact with $p_j$. The training weight ${W^{(h)}}$ and $W'$ matrix can be initialized by the Xaiver method\cite{Glorot2010UnderstandingNetworks}.
 
+The benchmark dataset is unbalanced, because the number of known interactions is far less than the total number of lncRNA-protein pairs. So, we optimize our FKLGCN model by minimizing the loss function:
+\begin{equation} \label{eq:LOSSr}
+Loss =  - \frac{1}{{m \times n}}(\lambda  \times \sum\nolimits_{(i,j) \in \Delta } {\log I'(i,j)}  + \sum\nolimits_{(i,j) \in \nabla } {\log (1 - I'(i,j)} ))
+\end{equation}
+where $\Delta $ denotes the set of known interacted lncRNA-protein pairs (positive samples), and $\nabla $ denotes the set of all the other lncRNA-protein pairs (negative samples). $\lambda  = \left| \nabla  \right|/\left| \Delta  \right|$, where $\left| \nabla  \right|$. Inspired by the study\cite{Yu2020c}, the Adam optimizer is adopted to minimize the loss function\cite{Kingma2015Adam:Optimization}.
 
 \bibliography{mendeley}
-
 \section*{Acknowledgements (not compulsory)}
 This work was supported by the National Nature Science Foundation of China (Grant Nos. 61702054 and 62072169), the National Key Research and Development Program (Grant Nos. 2017YFC1311003), and the Training Program for Excellent Young Innovators of Changsha (Grant No. kq2009093).
-
 \section*{Author contributions statement}
 W.L., S.W. and H.G. conceptualized the work and planned the procedure of experiments; H.G. collected the data; W.L. implemented all the experiments, analysed the results, and drafted the manuscript. All the authors have read and supported the final edition. 
-
 \section*{Additional information}
 To include, in this order: 
-
 \textbf{Access code} (where applicable); 
 All the datasets collected in this study and codes available are included in GitHub: https://github.com/vivian457/LPI-FKLGCN.
 

@@ -57,15 +57,8 @@ Considering the importance of features extracted from sequence information, simi
 \end{figure}
 
 \section*{Results}
-\subsection*{2.1 Experimental environment and datasets}
-The two lncRNA-protein interaction datasets used in this study are from previous literature studied by Zhang\cite{Zhang2018} and Zheng\cite{Zheng2017a}, respectively. They are shown in the Table \ref{tab:datasets}.
-
-
-
-In our experiments, we adopted 5-fold cross-validation (5-CV)
-to evaluate the performances of prediction methods. All known drug–disease associations are randomly split into five equalsized subsets. The cross-validation process is repeated fives times, and every subset is used as the testing set in turn while the remaining four subsets are used as the training set. In each fold, a prediction model is constructed on known associations in the training set and is used to predict associations in the testing set. We adopt the AUPR and the AUC as primary metrics, for they can measure the performances of methods without any specific threshold. Besides, the threshold-based metrics are also calculated, i.e. recall (also known as sensitivity), specificity, ACC, precision and F1-measure (F1).
-
-
+\subsection*{2.1 Datasets and experimental environment}
+There are two datasets used in this study from previous literature studied by Zhang\cite{Zhang2018} and Zheng\cite{Zheng2017a}, respectively. The Benchmark\_Dataset has 4158 experimentally validated LPIs, including 990 lncRNAs and 27 proteins. To further validate the results on the benchmark dataset, the performance test and comparison test are done on a Novel\_Dataset, which has 4467 experimentally validated LPIs, containing 1050 lncRNAs and 84 proteins. Two datasets are shown in the Table \ref{tab:datasets}. In this section, 5-fold cross-validation (5-fold CV) has been adopted to evaluate the performances of LPI-FKLGCN. All known LPIs are randomly divided into five strictly equal folds. Each fold is taken in turn as a test sample, and the remaining four folds as a training sample. We adopt the Area Under ROC curve (AUC) and Area Under Precision-Recall curve (AUPR)  as primary evaluation metrics. Besides, other metrics such as F1-score (F1), accuracy, recall, specificity and precision are computed in some experiments. All experiments have been done on the computer with 3.59 GHz, 6-core CPU, 32 GB of memory, and 64-bit Windows 10 Professional Operating Systems.
 \begin{table}[ht]
 \centering
 \caption{\label{tab:datasets} The statistics of the datasets used in the experiments (350 words max). Example legend text.}
@@ -84,10 +77,9 @@ Novel_Dataset & 1050 & 84 & 4467 \\
      \end{tablenotes}
      \end{threeparttable}
 \end{table}
-
-\subsection*{2.2 Parametric impact analysis}
-the learning rate $\upsilon$, 
-the total training epochs (*100)= $\kappa$,
+\subsection*{2.2 Parameter impact analysis}
+Cross validation have been performed to analyze the impact of parameters on model performance. There are several parameters in our LPI-FKLGCN model.We tested the penalty factor $\mu$ at the range $\{ 2,3,4,5,6,7,8,10,12,14\} $, iteration time $\kappa$$ \in $$\{ 1,5,10,20,30,40,50,60,70\} $, the learning rate $\upsilon$$ \in $$\{ 0.0001,0.0005,0.001,0.005,0.0075,0.01,0.025,0.05,0.075,0.1\} $, node dropout $\beta$ regular dropout $\gamma$
+the total training epochs (*100)= $\kappa$,  the number of layers $h$ in the GCN, 
 two dropout rates (node dropout $\beta$ and regular dropout $\gamma$)
 the penalty factor $\mu$ in the heterogeneous network.  
 By adjusting the parameters empirically,

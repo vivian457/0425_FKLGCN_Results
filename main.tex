@@ -59,6 +59,7 @@ Considering the importance of features extracted from sequence information, simi
 \section*{Results}
 \subsection*{2.1 Datasets and experimental environment}
 There are two datasets used in this study from previous literature studied by Zhang\cite{Zhang2018} and Zheng\cite{Zheng2017a}, respectively. The Benchmark\_Dataset has 4158 experimentally validated LPIs, including 990 lncRNAs and 27 proteins. To further validate the results on the benchmark dataset, the performance test and comparison test are done on a Novel\_Dataset, which has 4467 experimentally validated LPIs, containing 1050 lncRNAs and 84 proteins. Two datasets are shown in the Table \ref{tab:datasets}. In this section, 5-fold cross-validation (5-fold CV) has been adopted to evaluate the performances of LPI-FKLGCN. All known LPIs are randomly divided into five strictly equal folds. Each fold is taken in turn as a test sample, and the remaining four folds as a training sample. We adopt the Area Under ROC curve (AUC) and Area Under Precision-Recall curve (AUPR)  as primary evaluation metrics. Besides, other metrics such as F1-score (F1), accuracy, recall, specificity and precision are computed in some experiments. All experiments have been done on the computer with 3.59 GHz, 6-core CPU, 32 GB of memory, and 64-bit Windows 10 Professional Operating Systems.
+
 \begin{table}[ht]
 \centering
 \caption{\label{tab:datasets} The statistics of the datasets used in the experiments (350 words max). Example legend text.}
@@ -77,31 +78,18 @@ Novel_Dataset & 1050 & 84 & 4467 \\
      \end{tablenotes}
      \end{threeparttable}
 \end{table}
+
 \subsection*{2.2 Parameter impact analysis}
-Cross validation have been performed to analyze the impact of parameters on model performance. There are several parameters in our LPI-FKLGCN model.We tested the penalty factor $\mu$ at the range $\{ 2,3,4,5,6,7,8,10,12,14\} $, iteration time $\kappa$$ \in $$\{ 1,5,10,20,30,40,50,60,70\} $, the learning rate $\upsilon$$ \in $$\{ 0.0001,0.0005,0.001,0.005,0.0075,0.01,0.025,0.05,0.075,0.1\} $, node dropout $\beta$ regular dropout $\gamma$
-the total training epochs (*100)= $\kappa$,  the number of layers $h$ in the GCN, 
-two dropout rates (node dropout $\beta$ and regular dropout $\gamma$)
-the penalty factor $\mu$ in the heterogeneous network.  
-By adjusting the parameters empirically,
-we set the dimensionality of embeddings k = 64, the number of layers H = 3, 
-$\upsilon$ = 0.01, iteration time $\kappa$ = 40, $\beta$ = 0.4, $\gamma$ = 0.6 and $\mu$ = 6 for LPI-FKLGCN in the following experiments
-
-As shown in Figure \ref{fig:fig2-1},When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little.Thus, the FKLGCN schema is robust.
-
-LAGCN makes use of the drug–disease heterogeneous network to build the prediction model. The drug–disease heterogeneous network consists of known drug–disease associations, drug–drug similarities and disease–disease similarities. Since we consider five types of drug features and two similarity measures, we can train LAGCN on different heterogeneous networks based on different drug–drug similarities, and then discuss how these drug–drug similarities influence the performances of LAGCN.
-LAGCN models based on heterogeneous networks with different drug–drug similarities are evaluated by 5-CV on the main dataset, and the corresponding results are displayed in Table 2.
-Jaccard index leads to slightly better results than Cosine similarity measure, and similarities based on different features produce similar performances. These results indicate that LAGCN is robust, regardless of similarity measures and drug features. Drug target-based similarities (by both Jaccard index and Cosine similarity) leads to the highest AUPR score. Moreover, we only use the drug–disease associations to construct the network, and then build a reduced version of LAGCN based on this network, named as LAGCN-NH. According to Table 2, LAGCN-NH produces lower AUPR score and AUC score than all LAGCN models, which demonstrates that the drug–drug similarities and disease–disease similarities in the heterogeneous network contain useful information and lead to the improved performances of LAGCN.
-
-We also integrate different drug feature-based similarities using two simple strategies, and build LAGCN models. The average similarity strategy calculates the average of drug–drug similarities based on different features to obtain the integrated similarities. The concatenated feature-based similarity strategy firstly concatenate different drug feature vectors and then calculate drug–drug similarities based on the concatenated feature vectors. The results in Table 2 show that integrating different drug feature-based similarities do not necessarily lead to improved performances. The possible reason is that the known drug–disease associations make the major contribution to the prediction, and drug features bring supplementary information but have redundant information between them. Based on the above discussion, we adopt the target-based drug–drug similarities calculated by the Jaccard index, MeSHbased disease–disease similarities and drug–disease associations to construct the heterogeneous network and then build the LAGCN models in the following study
-
 \begin{figure}[ht]
 \centering
 \graphicspath{ {./images/} }
-\includegraphics[width=\textwidth]{fig1.jpg}
-%\includegraphics[height=4.5cm,width=7.5cm]{images/fig1_benckmark.pdf}
+%\includegraphics[width=\textwidth]{fig1.jpg}
+\includegraphics[height=6cm,width=17.5cm]{fig2.jpg}
 \caption{The influence of parameters of the LPI-FKLGCN model tested by 5-fold CV on the Benchmark Dataset}
 \label{fig:fig2-1}
 \end{figure}
+
+Cross validation have been performed to analyze the impact of parameters on model performance. There are several parameters in our LPI-FKLGCN model. We tested the penalty factor $\mu$ at the range $\{2,3,4,5,6,7,8,10,12,14\}$, iteration time $\kappa$$\in$$\{1,5,10,20,30,40,50,60,70\}$, the learning rate $\upsilon$$ \in $$\{0.0001,0.0005,0.001,0.005,0.0075,0.01,0.025,0.05,0.075,0.1\}$, the node dropout $\beta$$\in$$\{0.1,0.2,0.3,0.35,0.4,0.45,0.5,0.6\}$ and the regular dropout $\gamma$$\in$$\{0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8\}$. According to the optimal AUC and AUPR values, the parameter values are unanimously selected as: $\mu=6$, $\kappa$ = 40, $\upsilon$ = 0.01, $\beta$ = 0.4, $\gamma$ = 0.6 and $\mu$ = 6. Besides, the embeddings dimension $k$ is set to 64 and the number of layers of GCN $H$ is set to 3. The results of the parameter adjustment by 5-fold CV on the Benchmark Dataset are shown in Figure \ref{fig:fig2-1}. We also test the parameter effect in the Novel\_Dataset, the results are consistent with the benchmark dataset (The results of parameter impact on the novel dataset are recorded in the Supplementary file). It is shown that When the values of parameters vary in a wide range, the AUC and AUPR values of the model fluctuate little. So, our LPI-FKLGCN model is robust. 
 
 %The parameter adjustment in the novel dataset are stored in the supplementary file.
 %\begin{figure}[ht]
@@ -112,15 +100,7 @@ We also integrate different drug feature-based similarities using two simple str
 %    \label{fig:fig2-2}
 %\end{figure}
 
-\subsection*{2.3 Overall performance analysis}
-The impact of fast kernel learning and multi-layer graph convolution layers are shown in the Table \ref{tab:parameter1}.
-\begin{itemize}
-\item kernel fusion with average weights
-\item kernel fusion with SNF
-\item Graph conv 1 layer
-\item Graph conv 2 layer
-\item Graph conv 3 layer
-\end{itemize}
+\subsection*{2.3 Influence of FKL and GCN on model performance}
 \begin{table}[ht]
 \centering
  \caption{\label{tab:parameter1}The results of comparison with FKLGCN variants. (350 words max). Example legend text.}
@@ -129,19 +109,19 @@ The impact of fast kernel learning and multi-layer graph convolution layers are 
 \hline
 Dataset & Models & AUPR & AUC &	F1_score & Accuracy	& Recall & Specificity & Precision\\
 \hline
-\multirow{4}{5em}{Benchmark Dataset} 
+\multirow{4}{4em}{Benchmark Dataset} 
 & Fuse_AVG\tnote{1} & 0.2795 & 0.8736 & 0.2891 & 0.9220 & 0.4464 & 0.9395 & 0.2138\\
 & Fuse_SNF\tnote{2} & 0.3434	& 0.8874 & 0.3737	& 0.9351 & 0.5451	& 0.9494 & 0.2843\\
 & GCN with 1 layer conv & 0.5504 & 0.9476 & 0.5367 & 0.9628 & 0.6064 & 0.9759 & 0.4813\\ 
-& GCN with 2 layer conv & 0.5655 & 0.9487 & 0.5444 & 0.9616 & 0.6050 & 0.9733 & 0.4710\\
-& GCN with 3 layer conv& 0.5928 & 0.9502 & 0.5424 & 0.9705 & 0.6113 & 0.9784 & 0.6041\\
+& GCN with 2 layer conv & 0.5655 & 0.9487 & \bf{0.5444} & 0.9616 & 0.6050 & 0.9733 & 0.4710\\
+& GCN with 3 layer conv& \bf{0.5928} & \bf{0.9502} & 0.5424 & \bf{0.9705} & \bf{0.6113} & \bf{0.9784} & \bf{0.6041}\\
 \hline
-\multirow{4}{6em}{Novel Dataset} 
+\multirow{4}{4em}{Novel Dataset} 
 & Fuse_AVG\tnote{1} & 0.4946 & 0.9422 & 0.1655 & 0.9003 & 0.8451 & 0.9000 & 0.0908\\
 & Fuse_SNF\tnote{2} & 0.5121 & 0.9480 & 0.1782 & 0.9114 & 0.8693 & 0.9114	& 0.0988\\
 & GCN with 1 layer conv & 0.4469 & 0.9600 & 0.2282 & 0.9286 & 0.6566 & 0.9721 & 0.1313\\ 
-& GCN with 2 layer conv & 0.4890 & 0.9602 & 0.2317 & 0.9328 & 0.8165 & 0.9441 & 0.1350\\
-& GCN with 3 layer conv & 0.5212 & 0.9638 & 0.2362 & 0.9894 & 0.8859 & 0.9400 & 0.1362\\
+& GCN with 2 layer conv & 0.4890 & 0.9602 & 0.2317 & 0.9328 & 0.8165 & \bf{0.9441} & 0.1350\\
+& GCN with 3 layer conv & \bf{0.5212} & \bf{0.9638} & \bf{0.2362} & \bf{0.9894} & \bf{0.8859} & 0.9400 & \bf{0.1362}\\
 \hline
 \end{tabular}
 \begin{tablenotes}
@@ -151,78 +131,77 @@ Dataset & Models & AUPR & AUC &	F1_score & Accuracy	& Recall & Specificity & Pre
      \end{threeparttable}
 \end{table}
 
+Our model fuse four base kernels (features and similarities) into one comprehensive similarity by FKL and process the heterogeneous network by multi-layer GCN. In order to evaluate the effectiveness of FKL, two methods of kernel fusion with average similarity fusion (AVG) and similarity network fusion (SNF) are compared. In the process of average similarity fusion, the fusion weight of each base kernel is 0.25, and all base kernels are combined by linear weighting. The method of similarity network fusion is introduced by Wang et al.\cite{Wang2014}, which fuses the sub-networks into one comprehensive network by an iterative non-linear process based on propagation theory. Furthermore, in order to evaluate the influence of multi-layer GCN on model performance, we tested the GCN with only one convolutional layer, two convolutional layers and three convolutional layers, respectively. The results of test for fast kernel learning and multi-layer GCN are shown in the Table \ref{tab:parameter1}. 
+
+The GCN with 3 layer conv is our model, which is superior than the other four models both on the benchmark dataset and on the novel dataset according to the value of the evaluation metrics. In conclusion, the prediction performance of the LPI-FKLGCN can be greatly improved by the introduction of fast kernel fusion and three-layer GCN network.
 
 \subsection*{2.4 Comparison with other classic methods}
-\begin{itemize}
-\item RWR
-\item CF
-\item RA
-\item HRWR
-\item LPI-FKLKRR
-\end{itemize}
-\begin{itemize}
-\item RWR
-\item CF
-\item RA
-\item HRWR
-\item LPI-FKLKRR
-\end{itemize}
+In order to evaluate the performance of the LPI-FKLGCN, we compare our method with five baseline methods which used to predict lncRNA-protein interactions. The comparisons are implemented under the same experimental settings both on the benchmark dataset and the novel dataset. The parameters of these comparison methods are the same as those in the original literature. 
+
+Collaborative Filtering (CF)\cite{Sarwar2001} is widely used in recommendation system, which is used to generate the protein similarity network and construct a weighted bipartite graph to represent the known LPI dataset. Random Walk with Restart (RWR)\cite{Gan2014} is a general, flexible and propagation-based approach, which has been used in many fields of biological computation. Recent studies have proved that recommendations based on propagation and random walk are superior to collaborative filtering methods. LncRNA–Protein Bipartite Network Inference (LPBNI)\cite{Ge2016} run a resource allocation (RA) algorithm on a bipartite network to predict potential LPIs. LncRNA-Protein Interaction prediction based on Heterogeneous Network model (LPIHN)\cite{Li2015a} constructed a heterogeneous network which integrated a protein-protein interaction (PPI) network, a lncRNA-protein interaction network and a lncRNA-lncRNA similarity network, and then ran the random walk with restart (RWR) on it. Fast Kernel Learning with Kernel Ridge Regression (FKLKRR)\cite{Shen2019} applies fast kernel learning to integrate heterogeneous kernels and predicts LPI by the kernel ridge regression method.
+
+We conduct 5-fold CV for all these methods, and the results are averaged. Results of comparison on the benchmark dataset and the novel dataset are shown in Table \ref{tab:Comparison1}. Obviously, our model has the best performance with the AUC value of 0.950 and the AUPR value of 0.593 on benchmark dataset. According to the values of precision, accuracy and f1\_score, LPI-FKLGCN also outperforms other models. Again, in the novel dataset, every metric value is the best except the precision value.
 
 \begin{table}[ht]
 \centering
 \caption{\label{tab:Comparison1}The results of comparison with classical baseline methods. (350 words max). Example legend text.}
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline
-Dataset	& Metric & RWR	& CF & RA & HRWR & LPI_FKLKRR & LPI_GCN \\
+Dataset	& Metric & RWR	& CF & LPBNI & LPIHN & FKLKRR & FKLGCN \\
 \hline
 \multirow{5}{9em}{Benchmark_Dataset} 
-& AUPR & 0.283 & 0.236 & 0.230 & 0.330 & 0.551 & 0.593 \\ 
-& AUC & 0.813 & 0.769 	& 0.845 & 0.857 & 0.794 & 0.950 \\
-& Precision	& 0.354  & 0.303 & 0.414 & 0.290 & 0.519 & 0.604 \\
-& Accuracy	& 0.954 & 0.951 & 0.958 & 0.943 & 0.870 & 0.971 \\
-& F1_score & 0.360 & 0.299 & 0.387 & 0.334 & 0.508 & 0.542 \\
+& AUPR & 0.2827 & 0.2357 & 0.2399 & 0.3302 & 0.5506 & \bf{0.5929} \\ 
+& AUC & 0.8134 & 0.7686	& 0.8451 & 0.8569 & 0.7939 & \bf{0.9502} \\
+& Precision	& 0.3538  & 0.3029 & 0.4139 & 0.2888 & 0.5189 & \bf{0.6041} \\
+& Accuracy	& 0.9536 & 0.9506 & 0.9581 & 0.9431 & 0.8702 & \bf{0.9705} \\
+& F1_score & 0.3603 & 0.2992 & 0.3868 & 0.3337 & 0.5083 & \bf{0.5424} \\
 \hline
 \multirow{5}{9em}{Novel_Dataset} 
-&AUPR	&0.281	&0.262	&0.333	&0.247	&0.486	&0.521\\
-&AUC	&0.928	&0.902	&0.940	&0.931	&0.880	&0.963\\
-&Precision	&0.364	&0.361	&0.391	&0.286	&0.607	&0.136\\
-&Accuracy	&0.986	&0.986	&0.986	&0.982	&0.956	&0.989\\
-&F1_score	&0.3488	&0.322	&0.393	&0.339	&0.491	&0.236\\
+&AUPR	&0.2813	&0.2628	&0.3336	&0.2472	&0.4861	& \bf{0.5212}\\
+&AUC	&0.9282	&0.9028	&0.9407	&0.9315	&0.8807	& \bf{0.9639}\\
+&Precision	&0.3640	&0.3616	&0.3913	&0.2864	&\bf{0.6072}	& 0.1363\\
+&Accuracy	&0.9866	&0.9869	&0.9869	&0.9828	&0.9567	& \bf{0.9895}\\
+&F1_score	&0.3488	&0.3222	&0.3938	&0.3397	&\bf{0.4911}	&0.2362\\
 \hline
 \end{tabular}
 \end{table}
-Results of comparison with other classic methods are shown in Table \ref{tab:Comparison1}
 
 \subsection*{2.5 Comparison with the state-of-the-art methods}
-
+We also compared our model with the latest deep learning-based methods which used to predict associations for other biological entities. 5-fold CV are implemented 20 times on the novel dataset. The result is averaged over 20 times.
 \begin{itemize}
-\item LAGCN
-\item AEMDA
-\item LPI-GCNIMC
+\item LAGCN\cite{Yu2020c} integrates known drug-disease associations, drug similarity and disease similarity into a heterogeneous network, and combines graph convolution and attention mechanism to predict drug-disease associations.
+\item AEMDA\cite{Ji2021} extracts dense high-dimensional representations of diseases and miRNAs from integrated disease semantic similarity, miRNA functional similarity, and heterogeneous miRNA-disease interaction data, and uses deep auto-encoders to effectively predict disease-associated miRNAs.
+\item GCNIMC\cite{Long2020d} is a variant of GCNMDA, which is a new framework for predicting human microbial-drug associations based on Graphic Convolutional Network. In the hidden layer of GCN, a conditional random field (CRF) and a attention mechanism are introduced. The model of GCNIMC adopts inductive matrix completion for the final step of prediction.
 \end{itemize}
 
-\begin{itemize}
-\item LAGCN
-\item AEMDA
-\item LPI-GCNIMC
-\end{itemize}
+The results of comparison with the state-of-the-art methods are shown in the Figure \ref{Fig.lable3}. It can be seen that, on the novel dataset, our model FKLGCN has achieved an AUC value of 0.96, higher than the AUC values of LAGCN 0.95, AEMDA 0.93 and GCNIMC 0.89. LPI-FKLGCN also obtained an AUPR value of 0.52, higher than the AUPR values of LAGCN 0.27, AEMDA 0.28, and GCNIMC 0.15. Clearly, LPI-FKLGCN has the best performance in the results of LPI prediction.
+%\begin{figure}[ht]
+%\centering
+%\graphicspath{ {./images/} }
+%\includegraphics[width=\textwidth]{images/FIG4.jpg}
+%\caption{Comparison with the state-of-the-art methods}
+%\label{Fig.lable3}
+%\end{figure}
 
 \begin{figure}[ht]
 \centering
 \subfigure[The ROC curve]{
-\label{Fig.sub.1}
-\includegraphics[width=18em]{images/fig41.jpg}}
+%\includegraphics[width=18em]{images/fig41.jpg}}
+\includegraphics[width=6.5cm]{images/FIG4-1.jpg}}
 \subfigure[The PR curve]{
 \label{Fig.sub.2}
-\includegraphics[width=18em]{images/fig42.jpg}}
+%\includegraphics[width=18em]{images/fig42.jpg}}
+\includegraphics[width=6.5cm]{images/FIG4-2.jpg}}
 \caption{Comparison with the excellent methods}
 \label{Fig.lable3}
 \end{figure}
 
-The results of comparison with the state-of-the-art methods are shown in the Figure \ref{Fig.lable3}.
-
 \subsection*{2.6 Case study}
 TOP 10 predicted proteins for lncRNA NONHSAT145960 and TOP 10 predicted lncRNAs for protein ENSP00000401371 as shown in Table \ref{tab:caseStudy1}
+
+%出现某些预测的蛋白质的与lncRNA的值近似为0，可能原因其一，本身蛋白质与lncRNAs的关联数只有1，2不超过10个。
+TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
+
 
 In this section, we build an LAGCN model using all drug–disease associations and then predict novel associations. Because all known associations have been used to construct the prediction model, the predicted associations require verification by public literature or other available sources. Top 10 drug–disease associations predicted by LAGCN are listed in Table 6, and we can find evidence to confirm five out of them. For example, tamoxifen is capable of prolonging the lives of premenopausal women with breast cancer and decreasing the probability of recurrence, but it led to acute depression symptoms in a 34-year-old breast cancer patient [53]. Dexamethasone is a type of corticosteroid medication. It was used in the treatment of many conditions, including rheumatic problems, several skin diseases, severe allergies, asthma, chronic obstructive lung disease, croup, brain swelling, ocular pain following ophthalmic surgery and antibiotics in tuberculosis. It was also used as a direct chemotherapeutic agent in the treatment of multiple myeloma, in which dexamethasone is given in combination with lenalidomide [54].
 Furthermore, we check upon the top 10 candidate diseases for carbamazepine and the top 10 candidate drugs for breast neoplasms. Table 7 shows the results of our experiments, and some of the predictions can be confirmed. For example, carbamazepine is an anticonvulsant medication used primarily in the treatment of epilepsy and neuropathic pain, but De Sarro et al. [55] have proved that carbamazepine also leads to movement disorders by potentiating the anticonvulsant activity in the DBA/2 mice animal model. Breast cancer is the leading type of cancer in women, accounting for 25 $\%$ of all cases according to Wikipedia, and countless researchers have been devoting themselves to finding treatment of it. According to Tsai et al. [56], tamoxifen and fulvestrant are widely used therapeutic agents and are considered to alter estrogen receptor (ER) signaling in ER-positive breast cancers.
@@ -260,30 +239,10 @@ Furthermore, we check upon the top 10 candidate diseases for carbamazepine and t
 \end{tabular}
 \end{table}
 
-%出现某些预测的蛋白质的与lncRNA的值近似为0，可能原因其一，本身蛋白质与lncRNAs的关联数只有1，2不超过10个。
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
-TOP 10 predicted proteins for novel lncRNA are shown in Table \ref{tab:caseStudy1}
-
 \section*{Discussion}
-%The Discussion should be succinct and must not contain subheadings.
-%1.	简明扼要重申论文的主题及其重要性。
-%2.	简要重述你完成了哪些内容的研究。
-%3.	概括你的主要发现及其重要性。
-%4.	指出你得到的结果的意义，例如奠定了什么，丰富了什么，纠正了什么，补充了什么，提出了什么。
-%5.	解释论文工作从多大程度上接近了引言中所指出的需求。
-%6.	论文工作的不足。例如受目前研究条件所限，未能获取某些更高的条件才能处理的问题，概述未来可以开展什么研究。
-First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
+In order to better explore the molecular function and cellular mechanisms of lncRNAs, and better understand a variety of biological processes associated with diseases, we developed a novel deep learning-based framework to predict potential lncRNA-protein interactions. First of all, we get rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities. Then we fused them by fast kernel learning so as to produce a comprehensive similarity for lncRNAs and proteins, respectively. Next, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability score matrix is obtained by decoding. The predicted LPI can be obtained by sorting the predicted scores. Because of the introduction of FKL, an intermediate integration technique, the combination weightings can be automatically optimized according to the importance of each base kernel. Because of the combination of multi-layer embedding from graph convolution encoder, the proximity of different order can be integrated to improve the prediction accuracy. Above all, the model of LPI-FKLGCN is an predictive tool for LPIs with high accuracy, high efficiency and robustness.
 
-First of all, LPI-FKLGCN model obtains rich information about lncRNAs and proteins from different data sources, which are represented as a variety of features and similarities.They are then fused by fast kernel learning to generate a comprehensive lncRNA similarity and a comprehensive protein similarity. Then, a set of lncRNAs and a set of protein embedded representation vectors are generated through the nonlinear multi-layer graph convolutional network combined with the comprehensive similarity and interaction matrix of lncRNAs and proteins. Finally, the interaction probability fraction matrix is obtained by decoding.
+Considering the further development of lncRNA molecular functions, the further enrichment of multi-source heterogeneous databases, the combination of richer data information, such as mRNA, miRNA, disease and gene, the combination of superior deep learning-based methods and appropriate machine learning-based methods, we intend to design more appropriate encoders and decoders,to better predict and mine LPIs.
 
 \section*{Methods}
 In this section, we first construct a heterogeneous network integrating the lncRNA comprehensive similarity network, the protein comprehensive similarity network and known lncRNA-protein interaction network. Then, we generate multiple kernels for lncRNAs and proteins, and fuse these base kernels into a lncRNA comprehensive similarity and a protein comprehensive similarity, respectively. Thirdly, we deploy the multi-layer graph convolution network on the constructed heterogeneous network so as to generate the embedding representation vectors for lncRNAs and proteins. The combination of multi-layer embedding can integrate proximity of different order to improve the next prediction. Finally, the predicted lncRNA-protein interaction probability matrix is obtained by decoding. 
@@ -372,7 +331,7 @@ At last, to predict the unknown LPIs, a bi-linear activation function sigmoid is
 \begin{equation} \label{eq:decoder}
 I' = sigmoid({V_L}W'V_P^T)
 \end{equation}
-where $W' \in {\Re ^{k \times k}}$ is a training weight matrix. $I'$ is the predicted score matrix whose member $I'(i,j)$ indicates the probability that lncRNA $l_i$ will interact with $p_j$. The training weight ${W^{(h)}}$ and $W'$ matrix can be initialized by the Xaiver method\cite{Glorot2010UnderstandingNetworks}.
+where $W' \in {\Re ^{k \times k}}$ is a training weight matrix. $I'$ is the predicted score matrix whose member $I'(i,j)$ indicates the probability that lncRNA $l_i$ will interact with $p_j$. The training weight ${W^{(h)}}$ and $W'$ matrix can be initialized by the Xaiver method\cite{Glorot2010}.
 
 The benchmark dataset is unbalanced, because the number of known interactions is far less than the total number of lncRNA-protein pairs. So, we optimize our FKLGCN model by minimizing the loss function:
 \begin{equation} \label{eq:LOSSr}
